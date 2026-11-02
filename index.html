@@ -62,16 +62,13 @@ th{color:var(--muted);font-weight:600;border-top:0}
 #result .big{white-space:nowrap}
 .tone-warn{border-color:var(--warn)!important}
 .tone-ok{border-color:var(--ok)!important}
-.aux{margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:20px}
-.aux-title{margin:0;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em}
-.aux section{background:transparent;border:0;border-radius:0;padding:0}
-.aux h2{font-size:12px;margin-bottom:6px}
-.aux .kv{font-size:13px;color:var(--muted);padding:5px 0}
+.aux{margin-top:24px;padding-top:16px;border-top:2px dashed var(--line);display:flex;flex-direction:column;gap:12px}
+.aux-title{margin:0;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.aux section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;box-shadow:none}
+.aux h2{font-size:13px;color:var(--fg);margin-bottom:8px}
+.aux .kv{font-size:14px;padding:6px 0}
 .aux .note{font-size:12px}
-.aux .tabs{background:transparent}
-.aux .tabs button[aria-selected="true"]{background:var(--card)}
-.aux table{font-size:12px;color:var(--muted)}
-.aux .endlabel{fill:var(--muted)}
+.aux table{font-size:13px}
 </style>
 </head>
 <body>
@@ -90,7 +87,6 @@ th{color:var(--muted);font-weight:600;border-top:0}
   <div id="result" hidden>
     <h2 id="resultTitle">결제 방법 고르기</h2>
     <div id="options" style="display:flex;flex-direction:column;gap:12px"></div>
-    <p class="note" id="resultNote"></p>
   </div>
 
   <div class="aux">
@@ -386,7 +382,6 @@ function main(SERIES, live) {
     $('result').hidden = false;
     $('resultTitle').textContent = '결제 방법 고르기 · ' + nights + '박 · ' + fmt(total) + ' THB';
     $('options').innerHTML = OPTIONS.map(function (o) { return card(o, plan(o, nights, total)); }).join('');
-    $('resultNote').textContent = '개인카드 결제액은 ' + STEP + '바트 단위로 맞췄어요. 초과 확률은 맞춘 금액에서 다시 계산했고, 넘더라도 그 차액만 개인카드로 내면 돼요.';
   }
 
   try {
