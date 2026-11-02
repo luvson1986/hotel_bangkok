@@ -57,6 +57,21 @@ th{color:var(--muted);font-weight:600;border-top:0}
 .tabs{display:flex;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;margin-bottom:12px}
 .tabs button{flex:1;width:auto;margin:0;padding:8px 10px;background:transparent;color:var(--muted);font-size:14px}
 .tabs button[aria-selected="true"]{background:var(--card);color:var(--fg);box-shadow:0 0 0 1px var(--line)}
+/* 결과는 크고 테두리가 진한 카드, 아래 참고 정보는 카드 틀 없이 작고 흐리게 */
+#result section{border-width:2px;box-shadow:0 4px 16px rgba(20,25,31,.10)}
+#result .big{white-space:nowrap}
+.tone-warn{border-color:var(--warn)!important}
+.tone-ok{border-color:var(--ok)!important}
+.aux{margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:20px}
+.aux-title{margin:0;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em}
+.aux section{background:transparent;border:0;border-radius:0;padding:0}
+.aux h2{font-size:12px;margin-bottom:6px}
+.aux .kv{font-size:13px;color:var(--muted);padding:5px 0}
+.aux .note{font-size:12px}
+.aux .tabs{background:transparent}
+.aux .tabs button[aria-selected="true"]{background:var(--card)}
+.aux table{font-size:12px;color:var(--muted)}
+.aux .endlabel{fill:var(--muted)}
 </style>
 </head>
 <body>
@@ -78,8 +93,10 @@ th{color:var(--muted);font-weight:600;border-top:0}
     <p class="note" id="resultNote"></p>
   </div>
 
+  <div class="aux">
+  <p class="aux-title">참고 정보</p>
   <section>
-    <h2>적용 값 (자동)</h2>
+    <h2>계산에 쓰인 값</h2>
     <div class="kv"><span>박당 상한</span><span id="aCap"></span></div>
     <div class="kv"><span>회사 기준환율</span><span id="aUsd"></span></div>
     <div class="kv"><span>시장 환율</span><span id="aThb"></span></div>
@@ -111,6 +128,7 @@ th{color:var(--muted);font-weight:600;border-top:0}
       <p class="note">▲는 전날보다 법카로 더 결제할 수 있다는 뜻이고, ▼는 줄었다는 뜻이에요. 개인카드 금액은 이 값에서 정해져요.</p>
     </div>
   </section>
+  </div>
 </main>
 
 <script>
