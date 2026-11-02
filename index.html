@@ -202,6 +202,15 @@ function main(SERIES, live) {
     $('stale').hidden = false;
   }
 
+  // 든든한 결제의 마진: 최근 30영업일 중 4영업일 사이 법카 최대(원/USD÷원/THB, 곧 USD/THB)가 가장 크게 줄어든 폭. 최소 FLOOR_MARGIN.
+  var dyn = FLOOR_MARGIN;
+  for (var k = 0; k + 4 < dates.length; k++) {
+    dyn = Math.max(dyn, -(SERIES[dates[k + 4]].usd2thb / SERIES[dates[k]].usd2thb - 1));
+  }
+  SAFEST_MARGIN = dyn;
+  OPTIONS[1].m = dyn;
+  OPTIONS[1].tag = '최근 ' + dates.length + '영업일에 가장 크게 흔들린 폭(' + (dyn * 100).toFixed(2) + '%)까지 견디게 맞췄어요. 개인카드를 조금 더 쓰는 대신 여유를 남겨요.';
+
   var rows = dates.map(function (d) {
     var r = SERIES[d];
     var one = split({ capUsd: CAP_USD, nights: 1, usdKrw: r.usdKrw, thbKrw: thbKrwOf(r), feeRate: fee, margin: SAFEST_MARGIN, totalThb: null });
