@@ -45,8 +45,9 @@ th,td{text-align:right;padding:6px 4px;border-top:1px solid var(--line);white-sp
 th:first-child,td:first-child{text-align:left}
 th{color:var(--muted);font-weight:600;border-top:0}
 .chartwrap{position:relative}
-#chart,#cv{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
-#cv{width:100%;height:auto;display:block;touch-action:pan-y}
+#chart,#chart *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+#chart{touch-action:none}
+#cv{width:100%;height:auto;display:block;touch-action:none}
 .grid{stroke:var(--line);stroke-width:1}
 .ax{fill:var(--muted);font-size:10px;font-variant-numeric:tabular-nums}
 .line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
@@ -292,40 +293,27 @@ function main(SERIES, live) {
     }
     function hide() { cx.hidden = true; cd.hidden = true; tip.hidden = true; }
     var hit = $('hit');
-    // 마우스는 올리면 바로 보이고, 터치는 길게 눌러야(350ms) 날짜 선택이 시작된다. 누른 채 좌우로 움직이면 날짜가 이동한다.
+    // 마우스는 올리면 바로 보인다. 터치는 닿는 순간 그 날짜를 보여주고, 누른 채 좌우로 움직이면 날짜가 이동한다.
+    // 그래프 위에서는 스크롤, 글자 선택, 복사 메뉴 같은 브라우저 기본 동작을 모두 막는다.
     hit.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') show(e); });
     hit.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') hide(); });
-    var timer = null, active = false, sx = 0, sy = 0;
-    function endPress() { clearTimeout(timer); active = false; }
-    hit.addEventListener('touchstart', function (e) {
-      var t = e.touches[0];
-      sx = t.clientX; sy = t.clientY; active = false;
-      clearTimeout(timer);
-      timer = setTimeout(function () {
-        active = true;
-        if (navigator.vibrate) { try { navigator.vibrate(10); } catch (err) {} }
-        show({ clientX: sx, clientY: sy });
-      }, 350);
-    }, { passive: true });
-    hit.addEventListener('touchmove', function (e) {
-      var t = e.touches[0];
-      if (!active) {
-        if (Math.abs(t.clientX - sx) > 10 || Math.abs(t.clientY - sy) > 10) clearTimeout(timer);
-        return;
-      }
+    function touchShow(e) {
       if (e.cancelable) e.preventDefault();
-      show(t);
-    }, { passive: false });
-    hit.addEventListener('touchend', endPress);
-    hit.addEventListener('touchcancel', endPress);
-    hit.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+      show(e.touches[0]);
+    }
+    [cv, $('chart')].forEach(function (el) {
+      el.addEventListener('touchstart', touchShow, { passive: false });
+      el.addEventListener('touchmove', touchShow, { passive: false });
+      el.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+      el.addEventListener('selectstart', function (e) { e.preventDefault(); });
+    });
     document.addEventListener('touchstart', function (e) { if (!cv.contains(e.target)) hide(); }, { passive: true });
 
     var best = rows.reduce(function (a, r) { return r.v > a.v ? r : a; }, rows[0]);
     var worst = rows.reduce(function (a, r) { return r.v < a.v ? r : a; }, rows[0]);
     $('chartNote').textContent = '최근 ' + n + '영업일. 높을수록 법카로 더 많이 결제할 수 있어요. 최고 ' + fmt(best.v) + '(' + best.date.slice(5).replace('-', '/') +
       ') · 최저 ' + fmt(worst.v) + '(' + worst.date.slice(5).replace('-', '/') + '), 차이 ' + fmt(best.v - worst.v) + ' THB.' +
-      (window.matchMedia && matchMedia('(pointer: coarse)').matches ? ' 그래프를 길게 누른 채 좌우로 움직이면 날짜별로 볼 수 있어요.' : ' 그래프에 마우스를 올리면 날짜별로 볼 수 있어요.');
+      (window.matchMedia && matchMedia('(pointer: coarse)').matches ? ' 그래프를 터치한 채 좌우로 움직이면 날짜별로 볼 수 있어요.' : ' 그래프에 마우스를 올리면 날짜별로 볼 수 있어요.');
   }
   drawChart();
 
