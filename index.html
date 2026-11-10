@@ -38,6 +38,7 @@ button{font:inherit;font-weight:600;padding:12px 14px;border-radius:8px;border:0
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .big{font-size:28px;font-weight:700;letter-spacing:-.5px;font-variant-numeric:tabular-nums;line-height:1.2}
 .big small{font-size:13px;color:var(--muted);font-weight:500}
+.krw{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:2px}
 .odds{font-size:13px;color:var(--muted);margin:8px 0 0}
 .tbl{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
@@ -132,12 +133,6 @@ th{color:var(--muted);font-weight:600;border-top:0}
 <script>
 // 환율은 열 때마다 frankfurter(ECB 기준)에서 불러온다. 실패하면 아래 저장값으로 계산한다.
   var FALLBACK = {
-    '2026-09-21': { usdKrw: 1372.18, usd2thb: 33.235 },
-    '2026-09-22': { usdKrw: 1356.15, usd2thb: 33.14 },
-    '2026-09-23': { usdKrw: 1365.35, usd2thb: 33.29 },
-    '2026-09-24': { usdKrw: 1368.6, usd2thb: 33.48 },
-    '2026-09-25': { usdKrw: 1355.05, usd2thb: 33.345 },
-    '2026-09-28': { usdKrw: 1357.93, usd2thb: 33.57 },
     '2026-09-29': { usdKrw: 1353.36, usd2thb: 33.515 },
     '2026-09-30': { usdKrw: 1355.4, usd2thb: 33.565 },
     '2026-10-01': { usdKrw: 1361.27, usd2thb: 33.655 },
@@ -161,7 +156,13 @@ th{color:var(--muted);font-weight:600;border-top:0}
     '2026-10-27': { usdKrw: 1327.75, usd2thb: 33.77 },
     '2026-10-28': { usdKrw: 1340.47, usd2thb: 33.775 },
     '2026-10-29': { usdKrw: 1337.29, usd2thb: 33.755 },
-    '2026-10-30': { usdKrw: 1335.27, usd2thb: 33.73 }
+    '2026-10-30': { usdKrw: 1335.27, usd2thb: 33.73 },
+    '2026-11-02': { usdKrw: 1342.9, usd2thb: 33.76 },
+    '2026-11-03': { usdKrw: 1344.59, usd2thb: 33.755 },
+    '2026-11-04': { usdKrw: 1338.58, usd2thb: 33.64 },
+    '2026-11-05': { usdKrw: 1344.69, usd2thb: 33.44 },
+    '2026-11-06': { usdKrw: 1358.73, usd2thb: 33.55 },
+    '2026-11-09': { usdKrw: 1346.79, usd2thb: 33.49 }
   };
 
 function main(SERIES, live) {
@@ -378,7 +379,7 @@ function main(SERIES, live) {
       '<p class="tag">' + o.tag + '</p>' +
       '<div class="pair">' +
         '<div><div class="label">법카로 결제</div><div class="big">' + fmt(r.corp) + ' <small>THB</small></div></div>' +
-        '<div><div class="label">개인카드로 결제</div><div class="big">' + fmt(r.personal) + ' <small>THB</small></div></div>' +
+        '<div><div class="label">개인카드로 결제</div><div class="big">' + fmt(r.personal) + ' <small>THB</small></div><div class="krw">약 ' + fmt(r.personal * thbKrwOf(latest)) + '원</div></div>' +
       '</div>' +
       '<div class="kv"><span>예상 법카 청구 (오늘 환율)</span><span>' + fmt(r.expectedKrw) + '원</span></div>' +
       '<div class="kv"><span>한도 대비 여유</span><span>' + fmt(r.headroomKrw) + '원</span></div>' +
